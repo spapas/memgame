@@ -1,5 +1,6 @@
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
+import Card from './components/Card'
 import React from 'react'
 
 const imgsrc = ` photo_000.thumbnail.jpg   photo_001.thumbnail.jpg   photo_002.thumbnail.jpg   photo_003.thumbnail.jpg   photo_004.thumbnail.jpg
@@ -45,12 +46,13 @@ export default function App() {
   
   let images = randomPick(8)
   images = images.concat(images).sort(() => 0.5 - Math.random());
+
   
   return <>
     <Navbar />
     <Hero />
     <div className="grid grid-cols-4 gap-4 w-1/2 m-auto">
-      {images.map((src, idx) => <img src={src} key={idx} alt="memgame" className="w-100" />)}
+      {images.map((src, idx) => <Card src={src} key={idx} />)}
 
     </div>
   </>
