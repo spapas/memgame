@@ -92,13 +92,9 @@ export default function App() {
           //draft.cards[idx].isOpen = false
           draft.secondCard = idx
           draft.wait = true
-          
-          
         }
-        
       }
     })
-
 
   }
   
