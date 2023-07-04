@@ -41,18 +41,23 @@ function randomPick(n) {
 
 }
 
-
-export default function App() {
-  
-  let images = randomPick(8)
+function getInitialState(n) {
+  let images = randomPick(n/2)
   images = images.concat(images).sort(() => 0.5 - Math.random());
-  const initialState = {
+  return {
     cards: images.map( (src, idx) => ({ idx: idx, src: src, isOpen: false, matched: false })),
     firstCard: null,
     secondCard: null,
     tries: 0,
-    wait: false
+    wait: false,
+    blockNumber: n
   }
+}
+
+
+export default function App() {
+  
+  const initialState = getInitialState(4)
   const [state, setState] = useImmer(initialState)
   const wait = state.wait
   React.useEffect(() => {
@@ -68,6 +73,10 @@ export default function App() {
       })
     }, 1000)
   }, [wait]);
+
+  const setBlockNumber = (n) => {
+    setState(getInitialState(n));
+  }
 
   const onCardClick = (idx) => {
     if(state.wait) return 
@@ -97,11 +106,31 @@ export default function App() {
     })
 
   }
+
+  if(state.blockNumber >= 64) {
+
+  } 
+  let cols = 'grid-cols-'+Math.floor(Math.sqrt(state.blockNumber))
+  if(cols == 'grid-cols-7') cols = 'grid-cols-6'
   
+  let width = 'w-1/2'
+  if(state.blockNumber <= 16) {
+    width = 'w-1/2'
+    
+  } else if(state.blockNumber <= 25) {
+    width = 'w-2/3'
+  } else if(state.blockNumber <= 36) {
+    width = 'w-3/4'
+  } else {
+    width = 'w-100'
+  }
+  console.log(width)
+
   return <>
+    
     <Navbar />
-    <Hero tries={state.tries} />
-    <div className="grid grid-cols-4 gap-4 w-1/2 m-auto">
+    <Hero tries={state.tries} blockNumber={state.blockNumber} setBlockNumber={setBlockNumber} />
+    <div className={`grid ${cols} gap-1 ${width} m-auto`}>
       {state.cards.map(card => <Card key={card.idx} onClick={onCardClick} {...card} />)}
 
     </div>

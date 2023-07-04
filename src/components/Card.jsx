@@ -13,7 +13,4 @@ export default function Card({
             <img src={src} alt="memgame" className={`w-100 border-4 ${matched?'border-green-600':'border-rose-600'}`} onClick={()=>onClick(idx)}/>
         </div>
     </div>
-    /*
-    return <img src={isOpen?src:'/back.jpg'} alt="memgame" className={`w-100 border-4 ${matched?'border-green-600':'border-rose-600'}`} onClick={()=>onClick(idx)}/>
-    */
 }
