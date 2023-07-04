@@ -2,6 +2,8 @@ import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Card from './components/Card'
 import React from 'react'
+import { useImmer } from "use-immer";
+
 
 const imgsrc = ` photo_000.thumbnail.jpg   photo_001.thumbnail.jpg   photo_002.thumbnail.jpg   photo_003.thumbnail.jpg   photo_004.thumbnail.jpg
 photo_005.thumbnail.jpg   photo_006.thumbnail.jpg   photo_007.thumbnail.jpg   photo_008.thumbnail.jpg   photo_009.thumbnail.jpg   photo_010.thumbnail.jpg   photo_012.thumbnail.jpg
@@ -31,8 +33,6 @@ photo_178.thumbnail.jpg   photo_179.thumbnail.jpg   photo_180.thumbnail.jpg   ph
 photo_186.thumbnail.jpg   photo_187.thumbnail.jpg   photo_188.thumbnail.jpg   photo_189.thumbnail.jpg   photo_190.thumbnail.jpg   photo_191.thumbnail.jpg   photo_192.thumbnail.jpg
 photo_193.thumbnail.jpg   photo_194.thumbnail.jpg   photo_195.thumbnail.jpg   photo_196.thumbnail.jpg   photo_197.thumbnail.jpg   photo_198.thumbnail.jpg   photo_199.thumbnail.jpg`
 
-let nextId = 0;
-
 function randomPick(n) {
   const images = imgsrc.split(/[ \s]+/).map(n => 'thumbs/'+n).filter(n => n!='thumbs/');
   const shuffled = images.sort(() => 0.5 - Math.random());
@@ -46,13 +46,67 @@ export default function App() {
   
   let images = randomPick(8)
   images = images.concat(images).sort(() => 0.5 - Math.random());
+  const initialState = {
+    cards: images.map( (src, idx) => ({ idx: idx, src: src, isOpen: false, matched: false })),
+    firstCard: null,
+    secondCard: null,
+    tries: 0,
+    wait: false
+  }
+  const [state, setState] = useImmer(initialState)
+  const wait = state.wait
+  React.useEffect(() => {
+    console.log("EFF", wait)
+    if (!wait) return
+    const timer = setTimeout(() => {
+      setState(draft => {
+        draft.cards[draft.firstCard].isOpen = false
+        draft.cards[draft.secondCard].isOpen = false
+        draft.firstCard = null
+        draft.secondCard = null
+        draft.wait = false
+      })
+    }, 1000)
+  }, [wait]);
 
+  const onCardClick = (idx) => {
+    if(state.wait) return 
+    if (state.cards[idx].isOpen) return
+    
+
+    setState(draft => {
+      
+      draft.cards[idx].isOpen = true
+      if (draft.firstCard === null) {
+        draft.firstCard = idx
+      } else {
+        draft.tries++
+        if (draft.cards[draft.firstCard].src === draft.cards[idx].src) {
+          draft.cards[draft.firstCard].matched = true
+          draft.cards[idx].matched = true
+          draft.cards[draft.firstCard].isOpen = true
+          draft.cards[idx].isOpen = true
+          draft.firstCard = null
+        } else {
+          //draft.cards[draft.firstCard].isOpen = false
+          //draft.cards[idx].isOpen = false
+          draft.secondCard = idx
+          draft.wait = true
+          
+          
+        }
+        
+      }
+    })
+
+
+  }
   
   return <>
     <Navbar />
-    <Hero />
+    <Hero tries={state.tries} />
     <div className="grid grid-cols-4 gap-4 w-1/2 m-auto">
-      {images.map((src, idx) => <Card src={src} key={idx} />)}
+      {state.cards.map(card => <Card key={card.idx} onClick={onCardClick} {...card} />)}
 
     </div>
   </>
