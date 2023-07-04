@@ -11,5 +11,9 @@ export default {
   daisyui: {
     themes: ["retro"],
   },
+  safelist: [
+    { pattern: /w-+/ },
+    { pattern: /grid-cols-+/ },
+  ]
 }
 
