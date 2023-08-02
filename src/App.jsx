@@ -61,7 +61,7 @@ export default function App() {
   const [state, setState] = useImmer(initialState)
   const wait = state.wait
   React.useEffect(() => {
-    console.log("EFF", wait)
+
     if (!wait) return
     const timer = setTimeout(() => {
       setState(draft => {
@@ -113,24 +113,14 @@ export default function App() {
   let cols = 'grid-cols-'+Math.floor(Math.sqrt(state.blockNumber))
   if(cols == 'grid-cols-7') cols = 'grid-cols-6'
   
-  let width = 'w-1/2'
-  if(state.blockNumber <= 16) {
-    width = 'w-1/2'
-    
-  } else if(state.blockNumber <= 25) {
-    width = 'w-2/3'
-  } else if(state.blockNumber <= 36) {
-    width = 'w-3/4'
-  } else {
-    width = 'w-100'
-  }
+  let width = 'w-100'
   console.log(width)
 
   return <>
     
     <Navbar />
     <Hero tries={state.tries} blockNumber={state.blockNumber} setBlockNumber={setBlockNumber} />
-    <div className={`grid ${cols} gap-1 ${width} m-auto`}>
+    <div className={`grid ${cols} gap-1 ${width} m-auto justify-items-center`}>
       {state.cards.map(card => <Card key={card.idx} onClick={onCardClick} {...card} />)}
 
     </div>
