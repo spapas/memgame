@@ -19,25 +19,24 @@
 
   @media (max-width: 600px) {
     .tile {
-     
-      width: 4rem;
-      height: 4rem;
+      width: 2rem;
+      height: 2rem;
     }
   }
 
   @media (max-width: 800px) {
     .tile {
      
-      width: 6rem;
-      height: 6rem;
+      width: 4rem;
+      height: 4rem;
     }
   }
 
   @media (max-width: 1000px) {
     .tile {
      
-      width: 8rem;
-      height: 8rem;
+      width: 6rem;
+      height: 6rem;
     }
   }
   
