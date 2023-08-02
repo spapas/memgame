@@ -81,7 +81,6 @@ export default function App() {
   const onCardClick = (idx) => {
     if(state.wait) return 
     if (state.cards[idx].isOpen) return
-    
 
     setState(draft => {
       
@@ -114,15 +113,23 @@ export default function App() {
   if(cols == 'grid-cols-7') cols = 'grid-cols-6'
   
   let width = 'w-100'
-  console.log(width)
-
+  
+  let win = state.cards.filter(card => !card.isOpen).length == 0
+  
   return <>
     
     <Navbar />
-    <Hero tries={state.tries} blockNumber={state.blockNumber} setBlockNumber={setBlockNumber} />
-    <div className={`grid ${cols} gap-1 ${width} m-auto justify-items-center`}>
+    <Hero tries={state.tries} blockNumber={state.blockNumber} setBlockNumber={setBlockNumber} win={win} />
+    
+    {!win &&<div className={`grid ${cols} gap-1 ${width} m-auto justify-items-center`}>
       {state.cards.map(card => <Card key={card.idx} onClick={onCardClick} {...card} />)}
-
+    </div>}
+    
+    {win &&<div className="pyro-container">
+    <div className="pyro">
+      <div className="before"></div>
+      <div className="after"></div>
     </div>
+    </div>}
   </>
 }
